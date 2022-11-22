@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,12 @@ namespace WebApiMimic.Controllers
         [HttpGet]
         public ActionResult Obter(int id)
         {
-            return Ok(_banco.Palavras.Find(id));
+            var obj = _banco.Palavras.Find(id);
+
+            if (obj == null)
+                return NotFound();
+
+            return Ok(obj);
         }
         [Route("")]
         [HttpPost]
@@ -34,26 +40,36 @@ namespace WebApiMimic.Controllers
         {
             _banco.Palavras.Add(palavra);
             _banco.SaveChanges();
-            return Ok();
+            return Created($"/api/palavras/{palavra.Id}", palavra);
         }
         [Route("{id}")]
         [HttpPut]
         public ActionResult Atualiza(int id, [FromBody]Palavra palavra)
         {
-            palavra.Id = id;
+            var obj = _banco.Palavras.AsNoTracking().FirstOrDefault(p => p.Id == id);
+
+            if (obj == null)
+                return NotFound();
+
+             palavra.Id = id;
             _banco.Palavras.Update(palavra);
             _banco.SaveChanges();
-            return Ok();
+            return NoContent();
         }
         [Route("{id}")]
         [HttpDelete]
         public ActionResult Deletar(int id)
         {
             var palavra = _banco.Palavras.Find(id);
+
+            if (palavra == null)
+                return NotFound();
+
+            
             palavra.Ativo = false;
             _banco.Palavras.Update(palavra);
             _banco.SaveChanges();
-            return Ok();
+            return NoContent();
         }
     }
 }

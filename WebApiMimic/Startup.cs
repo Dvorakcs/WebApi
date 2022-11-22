@@ -33,6 +33,7 @@ namespace WebApiMimic
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStatusCodePages();
             app.UseMvc();        
         }
     }
