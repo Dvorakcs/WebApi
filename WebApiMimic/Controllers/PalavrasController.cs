@@ -20,7 +20,7 @@ namespace WebApiMimic.Controllers
         [HttpGet]
         public ActionResult ObterTodas()
         {
-            return Ok( _banco.Palavras);
+            return Ok( _banco.Palavras.Where(x => x.Ativo == true));
         }
         [Route("{id}")]
         [HttpGet]
@@ -28,22 +28,31 @@ namespace WebApiMimic.Controllers
         {
             return Ok(_banco.Palavras.Find(id));
         }
+        [Route("")]
         [HttpPost]
-        public ActionResult Cadastar(Palavra palavra)
+        public ActionResult Cadastar([FromBody]Palavra palavra)
         {
             _banco.Palavras.Add(palavra);
+            _banco.SaveChanges();
             return Ok();
         }
+        [Route("{id}")]
         [HttpPut]
-        public ActionResult Atualiza(int id, Palavra palavra)
+        public ActionResult Atualiza(int id, [FromBody]Palavra palavra)
         {
+            palavra.Id = id;
             _banco.Palavras.Update(palavra);
+            _banco.SaveChanges();
             return Ok();
         }
+        [Route("{id}")]
         [HttpDelete]
         public ActionResult Deletar(int id)
         {
-            _banco.Palavras.Remove(_banco.Palavras.Find(id));
+            var palavra = _banco.Palavras.Find(id);
+            palavra.Ativo = false;
+            _banco.Palavras.Update(palavra);
+            _banco.SaveChanges();
             return Ok();
         }
     }

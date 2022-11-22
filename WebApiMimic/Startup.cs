@@ -22,7 +22,8 @@ namespace WebApiMimic
             {
                 opt.UseSqlite("Data Source=Database\\Mimic.db");
             });
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,10 +33,7 @@ namespace WebApiMimic
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseRouting();
-
-            app.UseMvc();
+            app.UseMvc();        
         }
     }
 }
