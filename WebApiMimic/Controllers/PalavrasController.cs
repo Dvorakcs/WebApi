@@ -19,10 +19,22 @@ namespace WebApiMimic.Controllers
         }
         [Route("")]
         [HttpGet]
-        public ActionResult ObterTodas()
+        public ActionResult ObterTodas(DateTime? data, int? pagNumero,int? pagRegistrosPag)
         {
-            return Ok( _banco.Palavras.Where(x => x.Ativo == true));
+            
+            var item = _banco.Palavras.AsQueryable();
+            if (data.HasValue)
+            {
+                item = item.Where(p => p.Criado > data.Value || p.Atualizado > data.Value && p.Ativo == true);
+            }
+            if (pagNumero.HasValue)
+            {
+                item = item.Skip((pagNumero.Value - 1)* pagRegistrosPag.Value ).Take(pagRegistrosPag.Value);
+            }
+            return Ok(item.Where(p => p.Ativo == true));
         }
+
+
         [Route("{id}")]
         [HttpGet]
         public ActionResult Obter(int id)
