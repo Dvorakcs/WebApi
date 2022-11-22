@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiMimic.Database;
+using WebApiMimic.Helpers;
 using WebApiMimic.Models;
 
 namespace WebApiMimic.Controllers
@@ -19,7 +21,7 @@ namespace WebApiMimic.Controllers
         }
         [Route("")]
         [HttpGet]
-        public ActionResult ObterTodas(DateTime? data, int? pagNumero,int? pagRegistrosPag)
+        public ActionResult ObterTodas(DateTime? data, int? pagNumero,int? pagRegistros)
         {
             
             var item = _banco.Palavras.AsQueryable();
@@ -27,11 +29,29 @@ namespace WebApiMimic.Controllers
             {
                 item = item.Where(p => p.Criado > data.Value || p.Atualizado > data.Value && p.Ativo == true);
             }
+            else
+            {
+               item.Where(p => p.Ativo == true);
+            }
+            int quantidadeTotalRegistro = item.Count();
             if (pagNumero.HasValue)
             {
-                item = item.Skip((pagNumero.Value - 1)* pagRegistrosPag.Value ).Take(pagRegistrosPag.Value);
+               
+                item = item.Skip((pagNumero.Value - 1)* pagRegistros.Value ).Take(pagRegistros.Value);
+                var paginacao = new Paginacao();
+                paginacao.NumeroPagina = pagNumero.Value;
+                paginacao.RegistroPorPagina = pagRegistros.Value;
+                paginacao.TotalRegistros = quantidadeTotalRegistro;
+                paginacao.TotalPaginas = (int)Math.Ceiling((double)quantidadeTotalRegistro / pagRegistros.Value);
+                Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(paginacao));
+
+                if (pagNumero > paginacao.TotalPaginas)
+                {
+                    return NotFound();
+                }
             }
-            return Ok(item.Where(p => p.Ativo == true));
+            
+            return Ok(item);
         }
 
 
