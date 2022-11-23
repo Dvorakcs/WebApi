@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiMimic.Database;
+using WebApiMimic.Repositories.Contracts;
+using WebApiMimic.Repositories;
 
 namespace WebApiMimic
 {
@@ -24,6 +26,8 @@ namespace WebApiMimic
             });
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddOptions();
+
+            services.AddScoped<IPalavraRepository,PalavraRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
