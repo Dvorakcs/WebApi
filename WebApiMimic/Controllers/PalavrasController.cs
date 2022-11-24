@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using WebApiMimic.Helpers;
 using WebApiMimic.Models;
+using WebApiMimic.Models.DTO;
 using WebApiMimic.Repositories.Contracts;
 
 namespace WebApiMimic.Controllers
@@ -12,9 +15,11 @@ namespace WebApiMimic.Controllers
     public class PalavrasController:ControllerBase
     {
         private readonly IPalavraRepository _repository;
-        public PalavrasController(IPalavraRepository repository)
+        private readonly IMapper _mapper;
+        public PalavrasController(IPalavraRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
         [Route("")]
         [HttpGet]
@@ -40,11 +45,14 @@ namespace WebApiMimic.Controllers
         public ActionResult Obter(int id)
         {
             var obj = _repository.Obter(id);
-
+            PalavrasDTO palavrasDTO = _mapper.Map<Palavra, PalavrasDTO>(obj);
+            palavrasDTO.Links = new List<LinkDTO>();
+            palavrasDTO.Links.Add(new LinkDTO("self", $"https://localhost:44367/api/palavras/{palavrasDTO.Id}","GET"));
+            
             if (obj == null)
                 return NotFound();
 
-            return Ok(obj);
+            return Ok(palavrasDTO);
         }
         [Route("")]
         [HttpPost]

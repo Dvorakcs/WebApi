@@ -18,12 +18,14 @@ namespace WebApiMimic
         public void ConfigureServices(IServiceCollection services)
         {
             //adicao e configuracao do automapper
+            #region AutoMapper Config
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new DTOMapperProfile());
             });
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+            #endregion
 
             services.AddDbContext<MimicContext>(opt =>
             {
