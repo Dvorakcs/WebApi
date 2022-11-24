@@ -1,16 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApiMimic.Database;
 using WebApiMimic.Repositories.Contracts;
 using WebApiMimic.Repositories;
+using AutoMapper;
+using WebApiMimic.Helpers;
 
 namespace WebApiMimic
 {
@@ -20,6 +17,14 @@ namespace WebApiMimic
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //adicao e configuracao do automapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new DTOMapperProfile());
+            });
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddDbContext<MimicContext>(opt =>
             {
                 opt.UseSqlite("Data Source=Database\\Mimic.db");
