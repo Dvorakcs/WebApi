@@ -40,15 +40,17 @@ namespace WebApiMimic.Controllers
         }
 
 
-        [Route("{id}")]
-        [HttpGet]
+        
+        [HttpGet("{id}",Name = "obterPalavra")]
         public ActionResult Obter(int id)
         {
             var obj = _repository.Obter(id);
             PalavrasDTO palavrasDTO = _mapper.Map<Palavra, PalavrasDTO>(obj);
             palavrasDTO.Links = new List<LinkDTO>();
-            palavrasDTO.Links.Add(new LinkDTO("self", $"https://localhost:44367/api/palavras/{palavrasDTO.Id}","GET"));
-            
+            palavrasDTO.Links.Add(new LinkDTO("self", Url.Link("obterPalavra",new { id = palavrasDTO.Id }),"GET"));
+            palavrasDTO.Links.Add(new LinkDTO("update", Url.Link("atualizaPalavra", new { id = palavrasDTO.Id }), "PUT"));
+            palavrasDTO.Links.Add(new LinkDTO("delete", Url.Link("deletarPalavra", new { id = palavrasDTO.Id }), "DELETE"));
+
             if (obj == null)
                 return NotFound();
 
@@ -61,8 +63,8 @@ namespace WebApiMimic.Controllers
             _repository.Cadastrar(palavra);
             return Created($"/api/palavras/{palavra.Id}", palavra);
         }
-        [Route("{id}")]
-        [HttpPut]
+        
+        [HttpPut("{id}", Name = "atualizaPalavra")]
         public ActionResult Atualiza(int id, [FromBody]Palavra palavra)
         {
             var obj = _repository.Obter(id);
@@ -73,8 +75,8 @@ namespace WebApiMimic.Controllers
            _repository.Atualizar(palavra);
             return NoContent();
         }
-        [Route("{id}")]
-        [HttpDelete]
+
+        [HttpDelete("{id}", Name = "deletarPalavra")]
         public ActionResult Deletar(int id)
         {
             var palavra = _repository.Obter(id);
