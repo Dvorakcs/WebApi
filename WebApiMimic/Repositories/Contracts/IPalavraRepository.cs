@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using WebApiMimic.Helpers;
+﻿using WebApiMimic.Helpers;
 using WebApiMimic.Models;
 
 namespace WebApiMimic.Repositories.Contracts
