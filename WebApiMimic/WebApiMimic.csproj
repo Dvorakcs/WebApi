@@ -22,6 +22,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+	  <!--para funcionar o projeto tive que adicionar esse package para rodar o versionamento-->
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0-preview8.19405.7" />
   </ItemGroup>
 
 </Project>

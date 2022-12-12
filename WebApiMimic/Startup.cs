@@ -38,7 +38,7 @@ namespace WebApiMimic
             services.AddApiVersioning(cfg =>
             {
                 cfg.ReportApiVersions = true;
-                cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+               // cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
             });
         }
 
