@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using WebApiMimic.Models;
-using WebApiMimic.Models.DTO;
+using WebApiMimic.V1.Models;
+using WebApiMimic.V1.Models.DTO;
 
 namespace WebApiMimic.Helpers
 {

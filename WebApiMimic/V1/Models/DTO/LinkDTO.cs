@@ -1,5 +1,5 @@
 ﻿
-namespace WebApiMimic.Models.DTO
+namespace WebApiMimic.V1.Models.DTO
 {
     public class LinkDTO
     {

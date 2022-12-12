@@ -1,7 +1,7 @@
 ﻿using WebApiMimic.Helpers;
-using WebApiMimic.Models;
+using WebApiMimic.V1.Models;
 
-namespace WebApiMimic.Repositories.Contracts
+namespace WebApiMimic.V1.Repositories.Contracts
 {
     public interface IPalavraRepository
     {

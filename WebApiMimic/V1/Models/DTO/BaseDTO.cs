@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WebApiMimic.Models.DTO
+namespace WebApiMimic.V1.Models.DTO
 {
     public abstract class BaseDTO
     {

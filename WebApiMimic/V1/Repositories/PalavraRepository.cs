@@ -3,10 +3,10 @@ using System;
 using System.Linq;
 using WebApiMimic.Database;
 using WebApiMimic.Helpers;
-using WebApiMimic.Models;
-using WebApiMimic.Repositories.Contracts;
+using WebApiMimic.V1.Models;
+using WebApiMimic.V1.Repositories.Contracts;
 
-namespace WebApiMimic.Repositories
+namespace WebApiMimic.V1.Repositories
 {
     public class PalavraRepository : IPalavraRepository
     {

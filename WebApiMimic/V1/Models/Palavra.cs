@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WebApiMimic.Models.DTO
+namespace WebApiMimic.V1.Models
 {
-    public class PalavrasDTO:BaseDTO
+    public class Palavra
     {
         public int Id { get; set; }
         public string Nome { get; set; }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApiMimic.Models;
+using WebApiMimic.V1.Models;
 
 namespace WebApiMimic.Database
 {

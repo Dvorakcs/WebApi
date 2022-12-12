@@ -4,13 +4,15 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using WebApiMimic.Helpers;
-using WebApiMimic.Models;
-using WebApiMimic.Models.DTO;
-using WebApiMimic.Repositories.Contracts;
+using WebApiMimic.V1.Models;
+using WebApiMimic.V1.Models.DTO;
+using WebApiMimic.V1.Repositories.Contracts;
 
-namespace WebApiMimic.Controllers
+namespace WebApiMimic.V1.Controllers
 {
-    [Route("api/palavras")]
+    [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class PalavrasController:ControllerBase
     {
         private readonly IPalavraRepository _repository;
@@ -25,17 +27,24 @@ namespace WebApiMimic.Controllers
         public ActionResult ObterTodas([FromQuery]PalavraUrlQuery query)
         {
             var item = _repository.ObterPalavras(query);
+            if (item.Count == 0)
+                return NotFound();
+
             if (item.Paginacao != null)
-            {
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(item.Paginacao));
-                if (query.pagNumero > item.Paginacao.TotalPaginas)
-                {
-                    return NotFound();
-                }
+
+
+            var lista = _mapper.Map<PaginationList<Palavra>, PaginationList<PalavrasDTO>>(item);
+          
+
+            foreach (var palavra in lista)
+            {
+                palavra.Links = new List<LinkDTO>();
+                palavra.Links.Add(new LinkDTO("self", Url.Link("obterPalavra", new { id = palavra.Id }), "GET"));
+                palavra.Links.Add(new LinkDTO("update", Url.Link("atualizaPalavra", new { id = palavra.Id }), "PUT"));
+                palavra.Links.Add(new LinkDTO("delete", Url.Link("deletarPalavra", new { id = palavra.Id }), "DELETE"));
             }
-            
-           
-            return Ok(item.ToList());
+            return Ok(lista.ToList());
         }
 
 
