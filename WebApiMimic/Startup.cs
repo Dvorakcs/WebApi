@@ -8,6 +8,7 @@ using WebApiMimic.V1.Repositories.Contracts;
 using WebApiMimic.V1.Repositories;
 using AutoMapper;
 using WebApiMimic.Helpers;
+using System.Linq;
 
 namespace WebApiMimic
 {
@@ -32,14 +33,16 @@ namespace WebApiMimic
                 opt.UseSqlite("Data Source=Database\\Mimic.db");
             });
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddControllers();
             services.AddOptions();
 
             services.AddScoped<IPalavraRepository,PalavraRepository>();
             services.AddApiVersioning(cfg =>
             {
                 cfg.ReportApiVersions = true;
-               // cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +53,8 @@ namespace WebApiMimic
                 app.UseDeveloperExceptionPage();
             }
             app.UseStatusCodePages();
-            app.UseMvc();        
+            app.UseMvc();
+           
         }
     }
 }

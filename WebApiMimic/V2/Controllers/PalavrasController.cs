@@ -9,6 +9,7 @@ namespace WebApiMimic.V2
     // /api/v2.0/palavras
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Produces("application/json")]
     [ApiVersion("2.0")]
     public class PalavrasController : ControllerBase
     {

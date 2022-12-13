@@ -12,7 +12,8 @@ namespace WebApiMimic.V1.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    [ApiVersion("1.0")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.1")]
     public class PalavrasController:ControllerBase
     {
         private readonly IPalavraRepository _repository;
@@ -22,8 +23,9 @@ namespace WebApiMimic.V1.Controllers
             _repository = repository;
             _mapper = mapper;
         }
-        [Route("")]
-        [HttpGet]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [HttpGet("", Name = "obterTodas")]
         public ActionResult ObterTodas([FromQuery]PalavraUrlQuery query)
         {
             var item = _repository.ObterPalavras(query);
@@ -65,6 +67,9 @@ namespace WebApiMimic.V1.Controllers
             return Ok(palavrasDTO);
         }
         [Route("")]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+
         [HttpPost]
         public ActionResult Cadastar([FromBody]Palavra palavra)
         {          
@@ -83,7 +88,7 @@ namespace WebApiMimic.V1.Controllers
            _repository.Atualizar(palavra);
             return NoContent();
         }
-
+        [MapToApiVersion("1.1")]
         [HttpDelete("{id}", Name = "deletarPalavra")]
         public ActionResult Deletar(int id)
         {
