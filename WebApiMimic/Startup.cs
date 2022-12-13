@@ -8,6 +8,9 @@ using WebApiMimic.V1.Repositories.Contracts;
 using WebApiMimic.V1.Repositories;
 using AutoMapper;
 using WebApiMimic.Helpers;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.OpenApi.Models;
+using System;
 using System.Linq;
 
 namespace WebApiMimic
@@ -33,16 +36,28 @@ namespace WebApiMimic
                 opt.UseSqlite("Data Source=Database\\Mimic.db");
             });
             services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddControllers();
+           
             services.AddOptions();
 
             services.AddScoped<IPalavraRepository,PalavraRepository>();
             services.AddApiVersioning(cfg =>
             {
+                cfg.ApiVersionReader = new HeaderApiVersionReader("api-version");
                 cfg.ReportApiVersions = true;
+                cfg.AssumeDefaultVersionWhenUnspecified = true;
                 cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
             });
-            
+            services.AddControllers();
+            services.AddSwaggerGen(c => {
+                c.ResolveConflictingActions(apiDesciption => apiDesciption.First());
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "MIMIC API - V1",
+                        Version = "v1.0",
+                       
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,9 +67,14 @@ namespace WebApiMimic
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MimicApi v1");
+                c.RoutePrefix = string.Empty;
+            });
             app.UseStatusCodePages();
             app.UseMvc();
-           
+            
         }
     }
 }
